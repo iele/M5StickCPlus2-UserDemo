@@ -60,11 +60,6 @@ namespace TEST
             {
                 for (int i = 0; i < 13; ++i)
                 {
-                    // display->setTextColor((WiFi.RSSI(i) > -75) ? TFT_GREEN : TFT_RED, TFT_BLACK);
-                    // display->printf(" %s ", WiFi.SSID(i).c_str());
-                    // display->printf(" %d\n", WiFi.RSSI(i));
-                    // displayUpdate();
-
                     _wifi_list[i].rssi = WiFi.RSSI(i);
                     _wifi_list[i].ssid = WiFi.SSID(i);
 
@@ -119,9 +114,6 @@ namespace TEST
             display->printf(" %s ", _wifi_list[i].ssid.c_str());
             display->printf(" %d\n", _wifi_list[i].rssi);
             displayUpdate();
-
-            // _wifi_list[i].rssi = WiFi.RSSI(i);
-            // _wifi_list[i].ssid = WiFi.SSID(i);
         }
 
         waitNext();

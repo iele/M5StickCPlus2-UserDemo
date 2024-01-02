@@ -154,7 +154,6 @@ namespace TEST
 
             while (!btnPWR.read())
             {
-
                 display->setCursor(0, 10);
                 display->setFont(&fonts::Font0);
                 display->setTextSize(2);
@@ -181,46 +180,29 @@ namespace TEST
         }
     }
 
-    bool TEST::checkNext()
-    {
-        // if (btnA.pressed() || btnB.pressed()) {
-        //     return true;
-        // }
+    bool TEST::checkBtnA()
+    {        
         if (btnA.pressed())
         {
             _tone(5000, 50);
             return true;
         }
+        return false;
+    }
+
+    bool TEST::checkBtnB()
+    {
         if (btnB.pressed())
         {
-            _tone(5500, 50);
+            _tone(5000, 50);
             return true;
         }
-
-        // uint8_t count = 0;
-        // if (!btnB.read()) {
-        //     delay(10);
-        //     if (!btnB.read()) {
-
-        //         _tone(5500, 50);
-
-        //         while (!btnB.read()) {
-        //             delay(50);
-        //             count++;
-        //             if (count > 60) {
-        //                 power_off();
-        //             }
-        //         }
-        //         return true;
-        //     }
-        // }
-
         return false;
     }
 
     void TEST::waitNext()
     {
-        while (!checkNext())
+        while (!checkBtnA())
         {
             checkReboot();
             delay(10);

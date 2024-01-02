@@ -51,109 +51,33 @@ namespace TEST
         hardware_init();
         key_init();
         lcd_init();
-
-        // lcd.fillScreen(TFT_BLUE);
-        // delay(1000);
-
-        // lcd.fillScreen(TFT_RED);
-        // while (1)
-        // {
-        //     delay(1000);
-        // }
-
-        // gpio_test();
-
-        // gpio_reset_pin(GPIO_NUM_19);
-        // pinMode(19, OUTPUT);
-        // while (1) {
-        //     digitalWrite(19, 0);
-        //     printf("19 %d\n", digitalRead(19));
-        //     delay(1000);
-        //     digitalWrite(19, 1);
-        //     printf("19 %d\n", digitalRead(19));
-        //     delay(1000);
-        // }
-
-        /* Check test mode */
-        is_test_mode = false;
-        if (!btnB.read())
-        {
-            delay(20);
-            if (!btnB.read())
-            {
-                printf("test mode\n");
-                is_test_mode = true;
-
-                display->fillScreen(TFT_BLACK);
-                display->setFont(&fonts::efontCN_24);
-                display->printf("松开按键进入测试模式");
-                display->setCursor(0, 10);
-                displayUpdate();
-
-                /* Start wifi test */
-                // wifi_init();
-
-                while (!btnB.read())
-                {
-                    delay(10);
-                }
-            }
-        }
-        else
-        {
-            printf("normal mode\n");
-        }
-
-        // lcd_init();
         rtc_init();
         imu_init();
+        temp_init();
         mic_init();
         ble_init();
-
-        if (!is_test_mode)
-        {
-            ColorBar();
-        }
+        bounce_init();
+        leveller_init();
+        ColorBar();
     }
 
     void TEST::loop()
     {
-        // rtc_wakeup_test();
-
-        if (is_test_mode)
-        {
-            lcd_test();
-        }
-
         imu_test();
+        bounce_test();
+        leveller_test();
+        temp_test();
+        gol_test();
         rtc_test();
-
-        // mic_test();
-        // new_mic_test();
         new_mic_test_fft();
-
+        // tone_test();
         ir_test();
-
-        if (is_test_mode)
-        {
-            gpio_test();
-            key_test();
-            // rtc_wakeup_test();
-        }
-
         wifi_test();
+        ble_test();
 
         display->setFont(&fonts::Font0);
         display->setTextSize(1);
         displayUpdate();
-        ble_test();
-
-        if (is_test_mode)
-        {
-            // gpio_test();
-            // key_test();
-            rtc_wakeup_test();
-        }
     }
 
 }

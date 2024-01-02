@@ -61,7 +61,7 @@ namespace TEST
             delay(100);
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 break;
             }
@@ -177,7 +177,7 @@ namespace TEST
     //         }
 
     //         checkReboot();
-    //         if (checkNext()) {
+    //         if (checkBtnA()) {
     //             break;
     //         }
 

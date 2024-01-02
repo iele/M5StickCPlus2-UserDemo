@@ -255,10 +255,25 @@ namespace TEST
             delay(20);
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 printf("quit imu test\n");
                 break;
+            }
+            if (checkBtnB())
+            {
+                display->setCursor(0, 10);
+                display->setFont(&fonts::Font0);
+                display->setTextSize(2);
+                display->setTextColor(TFT_YELLOW, TFT_BLACK);
+                if (is_mute) {
+                    display->printf("SPEAKER IN LOUD\n");
+                } else {
+                    display->printf("SPEAKER IN MUTE\n");
+                }
+                is_mute = !is_mute;
+                displayUpdate();
+                delay(100);
             }
         }
     }

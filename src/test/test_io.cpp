@@ -170,7 +170,7 @@ namespace TEST
             }
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 break;
             }

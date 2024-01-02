@@ -28,6 +28,7 @@
 #include <esp_wifi.h>
 
 #include "arduinoFFT.h"
+#include "Kalman.h"
 
 #define display Disbuff
 #define displayUpdate Displaybuff
@@ -118,11 +119,16 @@ namespace TEST
     {
     private:
         bool is_test_mode;
+        bool is_mute;
 
         void hardware_init();
         void power_off();
 
-        inline void _tone(unsigned int frequency, unsigned long duration = 0UL) { tone(BUZZ_PIN, frequency, duration); }
+        inline void _tone(unsigned int frequency, unsigned long duration = 0UL) { 
+            if (!is_mute) { 
+                tone(BUZZ_PIN, frequency, duration); 
+            }
+        }
         inline void _noTone() { noTone(BUZZ_PIN); }
 
         /* Display */
@@ -136,6 +142,7 @@ namespace TEST
         void color_test();
         void lcd_init();
         void lcd_test();
+        void gol_test();
 
         /* Keys */
         void key_init();
@@ -144,13 +151,20 @@ namespace TEST
         Button btnB = Button(39, 20);
         Button btnPWR = Button(35, 20);
         void checkReboot();
-        bool checkNext();
+        bool checkBtnA();
+        bool checkBtnB();
         void waitNext();
 
         /* IMU */
         MPU6886 imu;
         void imu_init();
         void imu_test();
+        void bounce_init();
+        void bounce_test();
+        void leveller_init();
+        void leveller_test();
+        void temp_init();
+        void temp_test();
 
         /* Mic */
         void mic_init();
@@ -161,6 +175,8 @@ namespace TEST
 
         void new_mic_test();
         void new_mic_test_fft();
+
+        void tone_test();
 
         /* IR */
         void ir_init();

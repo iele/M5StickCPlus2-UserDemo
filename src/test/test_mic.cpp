@@ -9,6 +9,7 @@
  *
  */
 #include "test.h"
+#include <cmath>
 // #include "fft/fft.h"
 
 // extern const unsigned char ImageData[768];
@@ -265,7 +266,7 @@ namespace TEST
             display->pushSprite(0, 0);
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 break;
             }
@@ -563,7 +564,7 @@ namespace TEST
             displayUpdate();
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 break;
             }
@@ -728,7 +729,7 @@ namespace TEST
             displayUpdate();
 
             checkReboot();
-            if (checkNext())
+            if (checkBtnA())
             {
                 break;
             }
@@ -743,6 +744,86 @@ namespace TEST
         delete[] _vReal_old;
 
         display->setRotation(0);
+
+        printf("quit mic test\n");
+    }
+
+    void TEST::tone_test()
+    {
+        printf("mic test\n");
+
+        arduinoFFT _FFT;
+
+        const uint16_t _samples = 4096; // This value MUST ALWAYS be a power of 2
+        const double _samplingFrequency = 48000;
+
+        /*
+        These are the input and output vectors
+        Input vectors receive computed results from FFT
+        */
+        double *_vReal;
+        double *_vImag;
+        int16_t *_rawData;
+
+        /* Alloc buffer */
+        _vReal = new double[_samples];
+        _vImag = new double[_samples];
+        _rawData = new int16_t[_samples];
+
+        int _color_list[] = {
+            TFT_YELLOW,
+            TFT_ORANGE,
+            TFT_GREENYELLOW,
+            TFT_PINK,
+            TFT_BROWN,
+            TFT_GOLD,
+            TFT_SILVER,
+        };
+        int color_num = 0;
+
+        size_t bytes_read = 0;
+        while (1)
+        {
+            i2s_read(I2S_NUM_0, (void *)_rawData, (sizeof(int16_t) * _samples), &bytes_read, (100 / portTICK_RATE_MS));         
+            display->fillScreen(TFT_BLACK);
+            for (int i = 0; i < _samples; i++)
+            {
+                _vReal[i] = (double)_rawData[i];
+                _vImag[i] = 0.0;
+            }
+
+            _FFT = arduinoFFT(_vReal, _vImag, _samples, _samplingFrequency);
+            _FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+            _FFT.Compute(FFT_FORWARD);
+            _FFT.ComplexToMagnitude();
+
+            double maxValue = 0; 
+            int whenMax = 0;
+            for (int i = 1; i < _samples / 2; i++) {
+                double value = sqrt(pow(_vReal[i], 2) + pow(_vImag[i], 2)) ;
+                value = value / _samples / 2;
+                if (value >= maxValue) {
+                    maxValue = value;
+                    whenMax = i;
+                }
+            }
+
+            Disbuff->drawNumber((whenMax * 48000.0 / _samples), 5 , 5);
+
+            displayUpdate();
+
+            checkReboot();
+            if (checkBtnA())
+            {
+                break;
+            }
+        }
+
+        /* Free buffer */
+        printf("free mic buffer\n");
+        delete[] _rawData;
+        delete[] _vReal;
+        delete[] _vImag;
 
         printf("quit mic test\n");
     }
